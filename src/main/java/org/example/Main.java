@@ -1,5 +1,8 @@
 package org.example;
 
+import java.util.HashMap;
+import java.util.Map;
+
 interface Arayuz1 {
     void metot1();
 
@@ -41,13 +44,13 @@ abstract class Karisik<C extends Arayuz1> {
     private final C client;
 
     Karisik(C client) {
-            this.client = client;
-        }
+        this.client = client;
+    }
 
     public void abstractMetod1() {
         client.metot1();
         System.out.println("Abstract çalıştı");
-        }
+    }
 }
 
 class karisikSinif1 extends Karisik<Sinif1> {
@@ -64,17 +67,32 @@ class karisikSinif2 extends Karisik<Sinif2> {
     }
 }
 
+class HandlerManager {
+    private final Map<String, Karisik> handlerMap = new HashMap<>();
 
+    HandlerManager() {
+        Sinif1 sinif1 = new Sinif1();
+        karisikSinif1 karisikSinif1Instance = new karisikSinif1(sinif1);
+        handlerMap.put("Sinif1", karisikSinif1Instance);
+
+        Sinif2 sinif2 = new Sinif2();
+        karisikSinif2 karisikSinif2Instance = new karisikSinif2(sinif2);
+        handlerMap.put("Sinif2", karisikSinif2Instance);
+    }
+
+
+    public Karisik getHandler(String className) {
+        return handlerMap.get(className);
+    }
+}
 
 public class Main {
     public static void main(String[] args) {
 
-        karisikSinif1 karisikSinif1Instance = new karisikSinif1(new Sinif1());
 
-        karisikSinif1Instance.abstractMetod1();
+        HandlerManager handlerManager = new HandlerManager();
 
-        karisikSinif2 karisikSinif2Instance = new karisikSinif2(new Sinif2());
+        handlerManager.getHandler("Sinif1").abstractMetod1();
 
-        karisikSinif2Instance.abstractMetod1();
     }
 }
